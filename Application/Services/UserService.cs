@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions;
+using Application.Helpers;
 using Application.RequestApiModel;
 using Application.ResponseApiModel;
 using Domain.Errors;
@@ -61,7 +62,7 @@ public class UserService : IUserService
         var skillList = registerRequest.Skills
             .Select(model => new Skill
             {
-                Name = Enum.Parse<SkillName>(model.Name),
+                Name = (SkillName)model.Id,
                 ExperienceYears = model.ExperienceYears
             })
             .ToList();
@@ -96,7 +97,8 @@ public class UserService : IUserService
         }
 
         var skillsList = userFromDb.Skills.Select(skill =>
-            new SkillResponseApiModel(skill.Name.ToString(), skill.ExperienceYears));
+            new UserSkillResponseApiModel((int)skill.Name,
+                skill.ExperienceYears));
 
         return new UserResponseApiModel(userFromDb.Email, userFromDb.Name, userFromDb.Phone, skillsList,
             userFromDb.DateCreated, userFromDb.Rating, userFromDb.NumberOfEventsTookPart,
@@ -121,7 +123,7 @@ public class UserService : IUserService
         var skillList = userRequestApiModel.Skills
             .Select(model => new Skill
             {
-                Name = Enum.Parse<SkillName>(model.Name),
+                Name = (SkillName)model.Id,
                 ExperienceYears = model.ExperienceYears
             })
             .ToList();

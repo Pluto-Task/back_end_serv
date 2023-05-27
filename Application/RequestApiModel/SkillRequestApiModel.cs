@@ -1,3 +1,3 @@
 ﻿namespace Application.RequestApiModel;
 
-public record SkillRequestApiModel(string Name, float ExperienceYears);
+public record SkillRequestApiModel(int Id, float ExperienceYears);

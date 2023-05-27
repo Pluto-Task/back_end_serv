@@ -1,3 +1,3 @@
 ﻿namespace Application.ResponseApiModel;
 
-public record SkillResponseApiModel(string Name, float ExperienceYears);
+public record SkillResponseApiModel(int Id, string Name);

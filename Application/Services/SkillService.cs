@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Application.Abstractions;
+using Application.Helpers;
+using Application.ResponseApiModel;
 using Domain.Enums;
 using Domain.Shared;
 
@@ -8,28 +10,20 @@ namespace Application.Services;
 
 public class SkillService : ISkillService
 {
-    public Result<IEnumerable<string>> GetAllSkillStrings(CancellationToken cancellationToken)
+    public Result<IEnumerable<SkillResponseApiModel>> GetAllSkillStrings(CancellationToken cancellationToken)
     {
-        return Enum.GetNames<SkillName>().Select(GetDisplayName).ToList();
-    }
+        var enumType = typeof(SkillName);
+        var enumValues = Enum.GetValues(enumType);
 
-    private static string GetDisplayName(string name)
-    {
-        var type = typeof(SkillName);
+        var skillList = new List<SkillResponseApiModel>();
 
-        var fieldInfo = type.GetField(name);
-
-        if (fieldInfo != null)
+        foreach (var value in enumValues)
         {
-            if (Attribute.GetCustomAttribute(fieldInfo, typeof(DisplayAttribute)) is DisplayAttribute
-                {
-                    Name: not null
-                } attribute)
-            {
-                return attribute.Name;
-            }
+            var fieldName = EnumStringHelper.GetDisplayName(Enum.GetName(enumType, value)!);
+            var fieldValue = (int)value;
+            skillList.Add(new SkillResponseApiModel(fieldValue, fieldName));
         }
 
-        return name;
+        return skillList;
     }
 }
