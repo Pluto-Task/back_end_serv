@@ -1,3 +1,6 @@
-﻿namespace Application.ResponseApiModel;
+﻿using Domain.Entity;
 
-public record UserResponseApiModel(string Email, string Name);
+namespace Application.ResponseApiModel;
+
+public record UserResponseApiModel(string Email, string Name, string Phone, IEnumerable<Skill> Skills,
+    DateTime DateCreated, float Rating, uint NumberOfEventsTookPart, uint NumberOfEventsCreated);

@@ -2,7 +2,7 @@
 
 public enum SkillName
 {
-    PsychologicalAssistance,
+    PsychologicalAssistance = 1,
     MedicalCare,
     NursingCare,
     ChildCare,

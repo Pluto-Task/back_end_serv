@@ -2,9 +2,9 @@
 
 public sealed class User
 {
-    public User(Guid id, string email, string password, string name, string phone, IEnumerable<Skill> skills)
+    public User(string email, string password, string name, string phone, IEnumerable<Skill> skills)
     {
-        Id = id;
+        Id = Guid.NewGuid();
         Email = email;
         Password = password;
         Name = name;
