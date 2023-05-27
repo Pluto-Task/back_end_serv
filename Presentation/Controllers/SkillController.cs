@@ -15,10 +15,10 @@ public class SkillController : ApiController
     }
 
     [HttpGet("getAll")]
-    public ActionResult<IEnumerable<string>> GetAllSkillsString(CancellationToken cancellationToken)
+    public IActionResult GetAllSkillsString(CancellationToken cancellationToken)
     {
         var skillsResult = _skillService.GetAllSkillStrings(cancellationToken);
-        
+
         return skillsResult.IsFailure ? HandleFailure(skillsResult) : Ok(skillsResult.Value);
     }
 }

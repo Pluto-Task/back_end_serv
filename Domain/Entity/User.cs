@@ -28,4 +28,6 @@ public sealed class User
     public float Rating { get; set; }
     public uint NumberOfEventsTookPart { get; set; }
     public uint NumberOfEventsCreated { get; set; }
+
+    public IEnumerable<UserEvent> UserEvents { get; set; }
 }
