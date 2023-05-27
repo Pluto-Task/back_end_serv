@@ -13,4 +13,5 @@ public interface IUserService
     Task<Result<UserResponseApiModel>> GetUser(CancellationToken cancellationToken);
 
     Task<Result> UpdateUser(UpdateUserRequestApiModel userRequestApiModel, CancellationToken cancellationToken);
+    Task<Result> SetNewRating(UserRatingRequestApiModel requestApiModel, CancellationToken cancellationToken);
 }
