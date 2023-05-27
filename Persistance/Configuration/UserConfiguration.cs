@@ -34,5 +34,19 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasMany(p => p.Skills).WithOne(p => p.User).HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.UserEvents)
+            .WithMany((x => x.Users))
+            .UsingEntity<UserEventTable>(
+                x => x.HasOne(y => y.UserEvent)
+                    .WithMany()
+                    .HasForeignKey(prop => prop.UserEventId)
+                    .OnDelete(DeleteBehavior.Cascade),
+                x => x.HasOne(y => y.User)
+                    .WithMany()
+                    .HasForeignKey(prop => prop.UserId)
+                    .OnDelete(DeleteBehavior.Cascade),
+                x => { x.HasKey(prop => new { prop.UserEventId, prop.UserId }); }
+            );
     }
 }

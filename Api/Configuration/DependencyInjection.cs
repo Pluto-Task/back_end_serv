@@ -35,6 +35,7 @@ public static class DependencyInjection
     {
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUserEventService, UserEventService>();
         services.AddAutoMapper(typeof(Program).Assembly);
         services.AddHttpContextAccessor();
         services.AddScoped<IUserAccessor, UserAccessor>();
