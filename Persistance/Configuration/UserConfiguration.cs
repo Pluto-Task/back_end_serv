@@ -1,8 +1,6 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Domain.Entity;
+﻿using Domain.Entity;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Persistence.Configuration;
 
