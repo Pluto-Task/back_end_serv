@@ -1,10 +1,12 @@
 ﻿using Application.Abstractions;
+using Application.Helpers;
 using Application.RequestApiModel;
 using Application.ResponseApiModel;
 using Domain.Errors;
 using Domain.Repositories;
 using Domain.Shared;
 using Domain.Entity;
+using Domain.Enums;
 using Microsoft.AspNet.Identity;
 
 namespace Application.Services;
@@ -57,13 +59,21 @@ public class UserService : IUserService
 
         var hashedPassword = _passwordHasher.HashPassword(registerRequest.Password);
 
+        var skillList = registerRequest.Skills
+            .Select(model => new Skill
+            {
+                Name = (SkillName)model.Id,
+                ExperienceYears = model.ExperienceYears
+            })
+            .ToList();
+
         var user = new User
         {
             Email = registerRequest.Email,
             Password = hashedPassword,
             Name = registerRequest.Name,
             Phone = registerRequest.Phone,
-            Skills = registerRequest.Skills
+            Skills = skillList
         };
 
         await _userRepository.Add(user, cancellationToken);
@@ -81,10 +91,47 @@ public class UserService : IUserService
 
         var userFromDb = await _userRepository.FindByIdAsync(userId, cancellationToken);
 
-        return userFromDb == null
-            ? Result.Failure<UserResponseApiModel>(DomainErrors.User.InvalidId)
-            : new UserResponseApiModel(userFromDb.Email, userFromDb.Name, userFromDb.Phone, userFromDb.Skills,
-                userFromDb.DateCreated, userFromDb.Rating, userFromDb.NumberOfEventsTookPart,
-                userFromDb.NumberOfEventsCreated);
+        if (userFromDb == null)
+        {
+            return Result.Failure<UserResponseApiModel>(DomainErrors.User.InvalidId);
+        }
+
+        var skillsList = userFromDb.Skills.Select(skill =>
+            new UserSkillResponseApiModel((int)skill.Name,
+                skill.ExperienceYears));
+
+        return new UserResponseApiModel(userFromDb.Email, userFromDb.Name, userFromDb.Phone, skillsList,
+            userFromDb.DateCreated, userFromDb.Rating, userFromDb.NumberOfEventsTookPart,
+            userFromDb.NumberOfEventsCreated);
+    }
+
+    public async Task<Result> UpdateUser(UpdateUserRequestApiModel userRequestApiModel,
+        CancellationToken cancellationToken)
+    {
+        var userId = _userAccessor.GetCurrentUserId();
+
+        var userFromDb = await _userRepository.FindByIdAsync(userId, cancellationToken);
+
+        if (userFromDb == null)
+        {
+            return Result.Failure<UserResponseApiModel>(DomainErrors.User.InvalidId);
+        }
+
+        userFromDb.Name = userRequestApiModel.Name;
+        userFromDb.Phone = userRequestApiModel.Phone;
+
+        var skillList = userRequestApiModel.Skills
+            .Select(model => new Skill
+            {
+                Name = (SkillName)model.Id,
+                ExperienceYears = model.ExperienceYears
+            })
+            .ToList();
+
+        userFromDb.Skills = skillList;
+
+        await _userRepository.UpdateUserAsync(userFromDb, cancellationToken);
+
+        return Result.Success();
     }
 }

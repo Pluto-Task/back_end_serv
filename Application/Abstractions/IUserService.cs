@@ -11,4 +11,6 @@ public interface IUserService
     Task<Result<string>> Register(RegisterRequestApiModel registerRequest, CancellationToken cancellationToken);
 
     Task<Result<UserResponseApiModel>> GetUser(CancellationToken cancellationToken);
+
+    Task<Result> UpdateUser(UpdateUserRequestApiModel userRequestApiModel, CancellationToken cancellationToken);
 }

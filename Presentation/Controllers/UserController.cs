@@ -1,6 +1,5 @@
 ﻿using Application.Abstractions;
 using Application.RequestApiModel;
-using Application.ResponseApiModel;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Abstractions;
 
@@ -35,11 +34,19 @@ public sealed class UserController : ApiController
     }
 
     [HttpGet("get")]
-    public async Task<ActionResult<UserResponseApiModel>> GetUser(
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> GetUser(CancellationToken cancellationToken)
     {
         var user = await _userService.GetUser(cancellationToken);
 
         return user.IsFailure ? HandleFailure(user) : Ok(user.Value);
+    }
+
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateUser(UpdateUserRequestApiModel userRequestApiModel,
+        CancellationToken cancellationToken)
+    {
+        var user = await _userService.UpdateUser(userRequestApiModel, cancellationToken);
+
+        return user.IsFailure ? HandleFailure(user) : Ok();
     }
 }

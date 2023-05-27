@@ -16,6 +16,10 @@ public sealed class User
 
     public User()
     {
+        DateCreated = DateTime.Now;
+        Rating = 0f;
+        NumberOfEventsTookPart = 0;
+        NumberOfEventsCreated = 0;
     }
 
     public Guid Id { get; private set; }

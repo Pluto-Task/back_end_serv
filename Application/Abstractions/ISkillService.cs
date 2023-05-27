@@ -1,8 +1,9 @@
-﻿using Domain.Shared;
+﻿using Application.ResponseApiModel;
+using Domain.Shared;
 
 namespace Application.Abstractions;
 
 public interface ISkillService
 {
-    Result<IEnumerable<string>> GetAllSkillStrings(CancellationToken cancellationToken);
+    Result<IEnumerable<SkillResponseApiModel>> GetAllSkillStrings(CancellationToken cancellationToken);
 }

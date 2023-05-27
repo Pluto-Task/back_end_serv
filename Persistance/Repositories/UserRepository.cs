@@ -10,13 +10,14 @@ internal sealed class UserRepository : IUserRepository
 
     public UserRepository(ApplicationDbContext dbContext)
     {
-        _dbContext=dbContext;
+        _dbContext = dbContext;
     }
-    public async Task Add(User user,CancellationToken cancellationToken = default)
+
+    public async Task Add(User user, CancellationToken cancellationToken = default)
     {
         await _dbContext
             .Set<User>()
-            .AddAsync(user,cancellationToken);
+            .AddAsync(user, cancellationToken);
     }
 
     public async Task<IEnumerable<User>> GetAll(CancellationToken cancellationToken = default)
@@ -28,7 +29,7 @@ internal sealed class UserRepository : IUserRepository
     {
         return await _dbContext
             .Set<User>()
-            .FirstOrDefaultAsync(x => x.Email==email, token);
+            .FirstOrDefaultAsync(x => x.Email == email, token);
     }
 
     public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken = default)
@@ -42,6 +43,16 @@ internal sealed class UserRepository : IUserRepository
     {
         return await _dbContext
             .Set<User>()
+            .Include(x => x.Skills)
             .FirstOrDefaultAsync(x => x.Id == id, token);
+    }
+
+    public async Task UpdateUserAsync(User updatedUser, CancellationToken token = default)
+    {
+        _dbContext
+            .Set<User>()
+            .Update(updatedUser);
+
+        await _dbContext.SaveChangesAsync(token);
     }
 }
