@@ -13,4 +13,6 @@ public interface IUserRepository
     Task Add(User user, CancellationToken cancellationToken = default);
 
     Task<User?> FindByIdAsync(Guid id, CancellationToken token = default);
+
+    Task UpdateUserAsync(User updatedUser, CancellationToken token = default);
 }

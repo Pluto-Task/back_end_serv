@@ -1,4 +1,6 @@
-﻿namespace Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Domain.Enums;
 
 public enum SkillName
 {

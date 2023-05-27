@@ -46,4 +46,13 @@ internal sealed class UserRepository : IUserRepository
             .Include(x => x.Skills)
             .FirstOrDefaultAsync(x => x.Id == id, token);
     }
+
+    public async Task UpdateUserAsync(User updatedUser, CancellationToken token = default)
+    {
+        _dbContext
+            .Set<User>()
+            .Update(updatedUser);
+
+        await _dbContext.SaveChangesAsync(token);
+    }
 }

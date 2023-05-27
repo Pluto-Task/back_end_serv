@@ -102,4 +102,34 @@ public class UserService : IUserService
             userFromDb.DateCreated, userFromDb.Rating, userFromDb.NumberOfEventsTookPart,
             userFromDb.NumberOfEventsCreated);
     }
+
+    public async Task<Result> UpdateUser(UpdateUserRequestApiModel userRequestApiModel,
+        CancellationToken cancellationToken)
+    {
+        var userId = _userAccessor.GetCurrentUserId();
+
+        var userFromDb = await _userRepository.FindByIdAsync(userId, cancellationToken);
+
+        if (userFromDb == null)
+        {
+            return Result.Failure<UserResponseApiModel>(DomainErrors.User.InvalidId);
+        }
+
+        userFromDb.Name = userRequestApiModel.Name;
+        userFromDb.Phone = userRequestApiModel.Phone;
+
+        var skillList = userRequestApiModel.Skills
+            .Select(model => new Skill
+            {
+                Name = Enum.Parse<SkillName>(model.Name),
+                ExperienceYears = model.ExperienceYears
+            })
+            .ToList();
+
+        userFromDb.Skills = skillList;
+
+        await _userRepository.UpdateUserAsync(userFromDb, cancellationToken);
+
+        return Result.Success();
+    }
 }
