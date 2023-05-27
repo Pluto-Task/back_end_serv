@@ -38,6 +38,7 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(Program).Assembly);
         services.AddHttpContextAccessor();
         services.AddScoped<IUserAccessor, UserAccessor>();
+        services.AddScoped<ISkillService, SkillService>();
         return services;
     }
 
