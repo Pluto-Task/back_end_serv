@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.RequestApiModel;
 using Application.ResponseApiModel;
-using AutoMapper;
 using Domain.Errors;
 using Domain.Repositories;
 using Domain.Shared;
@@ -16,17 +15,15 @@ public class UserService : IUserService
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtProvider _jwtProvider;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly IUserAccessor _userAccessor;
 
     public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtProvider jwtProvider,
-        IUnitOfWork unitOfWork, IMapper mapper, IUserAccessor userAccessor)
+        IUnitOfWork unitOfWork, IUserAccessor userAccessor)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _jwtProvider = jwtProvider;
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _userAccessor = userAccessor;
     }
 
@@ -60,7 +57,14 @@ public class UserService : IUserService
 
         var hashedPassword = _passwordHasher.HashPassword(registerRequest.Password);
 
-        var user = new User(registerRequest.Email, hashedPassword, registerRequest.Name);
+        var user = new User
+        {
+            Email = registerRequest.Email,
+            Password = hashedPassword,
+            Name = registerRequest.Name,
+            Phone = registerRequest.Phone,
+            Skills = registerRequest.Skills
+        };
 
         await _userRepository.Add(user, cancellationToken);
 
@@ -79,6 +83,8 @@ public class UserService : IUserService
 
         return userFromDb == null
             ? Result.Failure<UserResponseApiModel>(DomainErrors.User.InvalidId)
-            : new UserResponseApiModel(userFromDb.Email, userFromDb.Name);
+            : new UserResponseApiModel(userFromDb.Email, userFromDb.Name, userFromDb.Phone, userFromDb.Skills,
+                userFromDb.DateCreated, userFromDb.Rating, userFromDb.NumberOfEventsTookPart,
+                userFromDb.NumberOfEventsCreated);
     }
 }
