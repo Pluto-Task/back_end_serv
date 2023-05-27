@@ -49,4 +49,13 @@ public sealed class UserController : ApiController
 
         return user.IsFailure ? HandleFailure(user) : Ok();
     }
+
+    [HttpPost("addRating")]
+    public async Task<IActionResult> AddRatingToUser(UserRatingRequestApiModel requestApiModel,
+        CancellationToken cancellationToken)
+    {
+        var user = await _userService.SetNewRating(requestApiModel, cancellationToken);
+
+        return user.IsFailure ? HandleFailure(user) : Ok();
+    }
 }

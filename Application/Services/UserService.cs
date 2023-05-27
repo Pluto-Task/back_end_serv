@@ -1,5 +1,4 @@
 ﻿using Application.Abstractions;
-using Application.Helpers;
 using Application.RequestApiModel;
 using Application.ResponseApiModel;
 using Domain.Errors;
@@ -100,8 +99,20 @@ public class UserService : IUserService
             new UserSkillResponseApiModel((int)skill.Name,
                 skill.ExperienceYears));
 
+        double rating;
+        if (userFromDb.RatingCount == 0)
+        {
+            rating = 0;
+        }
+        else
+        {
+            rating = Math.Round((double)userFromDb.RatingSumm / userFromDb.RatingCount, 1);
+        }
+
+
         return new UserResponseApiModel(userFromDb.Email, userFromDb.Name, userFromDb.Phone, skillsList,
-            userFromDb.DateCreated, userFromDb.RatingSumm, userFromDb.RatingCount, userFromDb.NumberOfEventsTookPart,
+            userFromDb.DateCreated, rating, userFromDb.RatingCount,
+            userFromDb.NumberOfEventsTookPart,
             userFromDb.NumberOfEventsCreated);
     }
 
@@ -114,7 +125,7 @@ public class UserService : IUserService
 
         if (userFromDb == null)
         {
-            return Result.Failure<UserResponseApiModel>(DomainErrors.User.InvalidId);
+            return Result.Failure(DomainErrors.User.InvalidId);
         }
 
         userFromDb.Name = userRequestApiModel.Name;
@@ -129,6 +140,24 @@ public class UserService : IUserService
             .ToList();
 
         userFromDb.Skills = skillList;
+
+        await _userRepository.UpdateUserAsync(userFromDb, cancellationToken);
+
+        return Result.Success();
+    }
+
+    public async Task<Result> SetNewRating(UserRatingRequestApiModel requestApiModel,
+        CancellationToken cancellationToken)
+    {
+        var userFromDb = await _userRepository.FindByIdAsync(requestApiModel.userId, cancellationToken);
+
+        if (userFromDb == null)
+        {
+            return Result.Failure(DomainErrors.User.InvalidId);
+        }
+
+        userFromDb.RatingSumm += requestApiModel.rating;
+        userFromDb.RatingCount++;
 
         await _userRepository.UpdateUserAsync(userFromDb, cancellationToken);
 
