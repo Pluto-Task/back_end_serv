@@ -57,8 +57,14 @@ public class UserService : IUserService
 
         var hashedPassword = _passwordHasher.HashPassword(registerRequest.Password);
 
-        var user = new User(registerRequest.Email, hashedPassword, registerRequest.Name, registerRequest.Phone,
-            registerRequest.Skills);
+        var user = new User
+        {
+            Email = registerRequest.Email,
+            Password = hashedPassword,
+            Name = registerRequest.Name,
+            Phone = registerRequest.Phone,
+            Skills = registerRequest.Skills
+        };
 
         await _userRepository.Add(user, cancellationToken);
 

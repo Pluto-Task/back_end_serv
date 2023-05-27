@@ -2,17 +2,20 @@
 
 public sealed class User
 {
-    public User(string email, string password, string name, string phone, IEnumerable<Skill> skills)
+    public User(string email, string password, string name, string phone)
     {
         Email = email;
         Password = password;
         Name = name;
         Phone = phone;
-        Skills = skills;
         DateCreated = DateTime.Now;
         Rating = 0f;
         NumberOfEventsTookPart = 0;
         NumberOfEventsCreated = 0;
+    }
+
+    public User()
+    {
     }
 
     public Guid Id { get; private set; }
