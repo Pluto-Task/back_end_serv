@@ -10,7 +10,7 @@ namespace Persistence
         {
             using var scope = app.ApplicationServices.CreateScope();
             var serviceProvider = scope.ServiceProvider;
-            DatabaseSeeder.SeedAsync(serviceProvider).Wait();
+           // DatabaseSeeder.SeedAsync(serviceProvider).Wait();
             return app;
         }
     }

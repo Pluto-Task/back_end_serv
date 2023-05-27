@@ -1,12 +1,14 @@
 ﻿using App.OptionsSetup;
 using Application.Abstractions;
 using Application.Services;
+using Domain.Repositories;
 using Infrastructure.Authentication;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Persistence;
+using Persistence.Repositories;
 using Scrutor;
 
 namespace Api.Configuration;
@@ -31,6 +33,7 @@ public static class DependencyInjection
 
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUserService, UserService>();
         services.AddAutoMapper(typeof(Program).Assembly);
         services.AddHttpContextAccessor();
