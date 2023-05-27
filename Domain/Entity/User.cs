@@ -9,7 +9,8 @@ public sealed class User
         Name = name;
         Phone = phone;
         DateCreated = DateTime.Now;
-        Rating = 0f;
+        RatingSumm = 0;
+        RatingCount = 0;
         NumberOfEventsTookPart = 0;
         NumberOfEventsCreated = 0;
     }
@@ -25,7 +26,8 @@ public sealed class User
     public string Phone { get; set; }
     public IEnumerable<Skill> Skills { get; set; }
     public DateTime DateCreated { get; set; }
-    public float Rating { get; set; }
+    public uint RatingSumm { get; set; }
+    public uint RatingCount { get; set; }
     public uint NumberOfEventsTookPart { get; set; }
     public uint NumberOfEventsCreated { get; set; }
 
