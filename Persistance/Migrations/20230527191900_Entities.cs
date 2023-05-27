@@ -21,7 +21,8 @@ namespace Persistence.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Rating = table.Column<float>(type: "real", nullable: false),
+                    RatingSumm = table.Column<long>(type: "bigint", nullable: false),
+                    RatingCount = table.Column<long>(type: "bigint", nullable: false),
                     NumberOfEventsTookPart = table.Column<long>(type: "bigint", nullable: false),
                     NumberOfEventsCreated = table.Column<long>(type: "bigint", nullable: false)
                 },

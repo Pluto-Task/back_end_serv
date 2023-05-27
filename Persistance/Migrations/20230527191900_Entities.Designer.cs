@@ -12,7 +12,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230527190655_Entities")]
+    [Migration("20230527191900_Entities")]
     partial class Entities
     {
         /// <inheritdoc />
@@ -80,8 +80,11 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Rating")
-                        .HasColumnType("real");
+                    b.Property<long>("RatingCount")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RatingSumm")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 

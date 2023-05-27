@@ -3,4 +3,4 @@
 namespace Application.ResponseApiModel;
 
 public record UserResponseApiModel(string Email, string Name, string Phone, IEnumerable<UserSkillResponseApiModel> Skills,
-    DateTime DateCreated, float Rating, uint NumberOfEventsTookPart, uint NumberOfEventsCreated);
+    DateTime DateCreated, uint NumberOfEventsTookPart, uint NumberOfEventsCreated);

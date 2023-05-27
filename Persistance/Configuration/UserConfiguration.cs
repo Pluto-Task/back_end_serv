@@ -26,7 +26,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.DateCreated).IsRequired();
 
-        builder.Property(x => x.Rating).IsRequired();
+       // builder.Property(x => x.Rating).IsRequired();
 
         builder.Property(x => x.NumberOfEventsTookPart).IsRequired();
 

@@ -77,8 +77,11 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Rating")
-                        .HasColumnType("real");
+                    b.Property<long>("RatingCount")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RatingSumm")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 

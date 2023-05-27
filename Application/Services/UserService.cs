@@ -101,7 +101,7 @@ public class UserService : IUserService
                 skill.ExperienceYears));
 
         return new UserResponseApiModel(userFromDb.Email, userFromDb.Name, userFromDb.Phone, skillsList,
-            userFromDb.DateCreated, userFromDb.Rating, userFromDb.NumberOfEventsTookPart,
+            userFromDb.DateCreated, userFromDb.NumberOfEventsTookPart,
             userFromDb.NumberOfEventsCreated);
     }
 
