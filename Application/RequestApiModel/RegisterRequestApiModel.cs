@@ -1,3 +1,6 @@
-﻿namespace Application.RequestApiModel;
+﻿using Domain.Entity;
 
-public sealed record RegisterRequestApiModel(string Name,string Email, string Password);
+namespace Application.RequestApiModel;
+
+public sealed record RegisterRequestApiModel(string Email, string Password, string Name, string Phone,
+    IEnumerable<Skill> Skills);
