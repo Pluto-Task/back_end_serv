@@ -18,6 +18,8 @@ public sealed class User
     public User()
     {
         DateCreated = DateTime.Now;
+        RatingSumm = 0;
+        RatingCount = 0;
         NumberOfEventsTookPart = 0;
         NumberOfEventsCreated = 0;
     }
