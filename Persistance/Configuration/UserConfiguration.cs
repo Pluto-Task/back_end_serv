@@ -1,6 +1,8 @@
-﻿using Domain.Entity;
+﻿using System.Security.Cryptography.X509Certificates;
+using Domain.Entity;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Persistence.Configuration;
 
@@ -21,5 +23,18 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Email).IsRequired();
 
         builder.HasIndex(x => x.Email).IsUnique();
+
+        builder.Property(x => x.Phone).IsRequired();
+
+        builder.Property(x => x.DateCreated).IsRequired();
+
+        builder.Property(x => x.Rating).IsRequired();
+
+        builder.Property(x => x.NumberOfEventsTookPart).IsRequired();
+
+        builder.Property(x => x.NumberOfEventsCreated).IsRequired();
+
+        builder.HasMany(p => p.Skills).WithOne(p => p.User).HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

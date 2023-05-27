@@ -2,8 +2,7 @@
 
 public sealed class User
 {
-    public User(Guid id, string email, string password, string name, string phone, IEnumerable<Skill> skills,
-        float rating, int numberOfEventsTookPart)
+    public User(Guid id, string email, string password, string name, string phone, IEnumerable<Skill> skills)
     {
         Id = id;
         Email = email;
@@ -12,8 +11,9 @@ public sealed class User
         Phone = phone;
         Skills = skills;
         DateCreated = DateTime.Now;
-        Rating = rating;
-        NumberOfEventsTookPart = numberOfEventsTookPart;
+        Rating = 0f;
+        NumberOfEventsTookPart = 0;
+        NumberOfEventsCreated = 0;
     }
 
     public Guid Id { get; private set; }
@@ -24,5 +24,6 @@ public sealed class User
     public IEnumerable<Skill> Skills { get; set; }
     public DateTime DateCreated { get; set; }
     public float Rating { get; set; }
-    public int NumberOfEventsTookPart { get; set; }
+    public uint NumberOfEventsTookPart { get; set; }
+    public uint NumberOfEventsCreated { get; set; }
 }
