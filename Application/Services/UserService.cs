@@ -5,6 +5,7 @@ using Domain.Errors;
 using Domain.Repositories;
 using Domain.Shared;
 using Domain.Entity;
+using Domain.Enums;
 using Microsoft.AspNet.Identity;
 
 namespace Application.Services;
@@ -57,13 +58,21 @@ public class UserService : IUserService
 
         var hashedPassword = _passwordHasher.HashPassword(registerRequest.Password);
 
+        var skillList = registerRequest.Skills
+            .Select(model => new Skill
+            {
+                Name = Enum.Parse<SkillName>(model.Name),
+                ExperienceYears = model.ExperienceYears
+            })
+            .ToList();
+
         var user = new User
         {
             Email = registerRequest.Email,
             Password = hashedPassword,
             Name = registerRequest.Name,
             Phone = registerRequest.Phone,
-            Skills = registerRequest.Skills
+            Skills = skillList
         };
 
         await _userRepository.Add(user, cancellationToken);
@@ -81,10 +90,16 @@ public class UserService : IUserService
 
         var userFromDb = await _userRepository.FindByIdAsync(userId, cancellationToken);
 
-        return userFromDb == null
-            ? Result.Failure<UserResponseApiModel>(DomainErrors.User.InvalidId)
-            : new UserResponseApiModel(userFromDb.Email, userFromDb.Name, userFromDb.Phone, userFromDb.Skills,
-                userFromDb.DateCreated, userFromDb.Rating, userFromDb.NumberOfEventsTookPart,
-                userFromDb.NumberOfEventsCreated);
+        if (userFromDb == null)
+        {
+            return Result.Failure<UserResponseApiModel>(DomainErrors.User.InvalidId);
+        }
+
+        var skillsList = userFromDb.Skills.Select(skill =>
+            new SkillResponseApiModel(skill.Name.ToString(), skill.ExperienceYears));
+
+        return new UserResponseApiModel(userFromDb.Email, userFromDb.Name, userFromDb.Phone, skillsList,
+            userFromDb.DateCreated, userFromDb.Rating, userFromDb.NumberOfEventsTookPart,
+            userFromDb.NumberOfEventsCreated);
     }
 }
