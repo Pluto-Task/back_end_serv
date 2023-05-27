@@ -11,8 +11,12 @@ public sealed class ApplicationDbContext : DbContext
 
     }
 
-    //db sets
     public DbSet<User> Users { get; set; }
+    public DbSet<UserEvent> UserEvents { get; set; }
+
+    public DbSet<UserEventTable> UserEventsTable { get; set; }
+
+    public DbSet<EventSkills> EventSkills { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);

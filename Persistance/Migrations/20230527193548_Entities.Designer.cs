@@ -12,7 +12,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230527191900_Entities")]
+    [Migration("20230527193548_Entities")]
     partial class Entities
     {
         /// <inheritdoc />
@@ -118,6 +118,13 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<long>("CurrentPeople")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -127,6 +134,9 @@ namespace Persistence.Migrations
 
                     b.Property<bool>("IsClosed")
                         .HasColumnType("bit");
+
+                    b.Property<long>("MaxPeople")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()

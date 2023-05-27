@@ -1,6 +1,5 @@
 ﻿namespace Application.RequestApiModel;
 
-public sealed record UserEventRequestApiModel(string Title, DateTime StartDate,
-    DateTime EndDate, IDictionary<string,float> Skills, string Address, string Build,
+public sealed record UserEventRequestApiModel(string Title, string Description, DateTime StartDate,
+    DateTime EndDate, uint MaxPeople, uint CurrentPeople, IEnumerable<EventSkillsRequestApiModel> Skills, string Address, string Build,
     string PhoneNumber, string Coordinates, string Email);
-

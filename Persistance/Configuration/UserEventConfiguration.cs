@@ -16,6 +16,9 @@ namespace Persistence.Configuration
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
             builder.Property(x => x.Title).IsRequired();
+            builder.Property(x => x.Description).IsRequired();
+            builder.Property(x=>x.MaxPeople).IsRequired();
+            builder.Property(x=>x.CurrentPeople).IsRequired();
 
             builder.Property(x => x.Address).IsRequired();
 
@@ -29,18 +32,12 @@ namespace Persistence.Configuration
 
             builder.Property(x => x.EndDate).IsRequired();
 
-            builder.Property(x => x.Skills).IsRequired();
-
             builder.Property(x => x.PhoneNumber).IsRequired();
 
             builder.Property(x => x.Email).IsRequired();
 
-            builder
-                .Property(u => u.Skills)
-                .HasConversion(
-                    skills => JsonConvert.SerializeObject(skills),
-                    json => JsonConvert.DeserializeObject<Dictionary<string, float>>(json)
-                );
+            builder.HasMany(p => p.EventSkills).WithOne(p => p.UserEvent).HasForeignKey(c => c.UserEventId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

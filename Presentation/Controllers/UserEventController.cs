@@ -17,7 +17,7 @@ namespace Presentation.Controllers
             _userEventService = userEventService;
         }
 
-        [HttpGet("createEvent")]
+        [HttpPost("createEvent")]
         public async Task<IActionResult> CreateUserEvent([FromBody] UserEventRequestApiModel request,
             CancellationToken cancellationToken)
         {
@@ -26,7 +26,7 @@ namespace Presentation.Controllers
             return result.IsFailure ? HandleFailure(result) : Ok();
         }
 
-        [HttpGet("deleteEvent/{id}")]
+        [HttpDelete("deleteEvent/{id}")]
         public async Task<IActionResult> DeleteUserEvent(Guid id,
             CancellationToken cancellationToken)
         {
