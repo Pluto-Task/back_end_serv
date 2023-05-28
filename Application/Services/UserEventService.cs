@@ -122,7 +122,7 @@ namespace Application.Services
             var result = await _userEventRepository.GetWithInclude(x=>true, cancellationToken, y => y.EventSkills);
             if (filter.MaxPeople != 0 && !filter.Skills.Any() && string.IsNullOrEmpty(filter.City))
             {
-                result = result.Where(x => x.Address == filter.City || x.MaxPeople ==filter.MaxPeople || x.EventSkills.Any(y => filter.Skills.Contains(y.SkillId)));
+                result = result.Where(x => x.Address == filter.City || x.MaxPeople == filter.MaxPeople || x.EventSkills.Any(y => filter.Skills.Contains(y.SkillId)));
             }
 
             var newResult = new UserEventsResponseApiModel(result.Select(x => new UserEventResponseApiModel(x.Id,
@@ -149,7 +149,7 @@ namespace Application.Services
 
         public async Task<Result<UserEventsResponseApiModel>> GetUserEvents(CancellationToken cancellationToken)
         {
-            var result = await _userEventTableRepository.GetWithInclude(x=>x.UserId == _userAccessor.GetCurrentUserId(), cancellationToken, x=>x.UserEvent);
+            var result = await _userEventTableRepository.GetWithInclude(x=>x.UserId == _userAccessor.GetCurrentUserId(), cancellationToken, x=>x.UserEvent, y=>y.UserEvent.EventSkills);
 
             var newResult = new UserEventsResponseApiModel(result.Select(x => new UserEventResponseApiModel(x.UserEvent.Id,
                 x.UserEvent.Title, x.UserEvent.Description, x.UserEvent.StartDate, x.UserEvent.EndDate,

@@ -12,7 +12,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230527210857_Entities")]
+    [Migration("20230528065537_Entities")]
     partial class Entities
     {
         /// <inheritdoc />
@@ -180,20 +180,26 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entity.UserEventTable", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("UserEventId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsConfirmed")
-                        .HasColumnType("bit");
+                    b.HasKey("Id");
 
-                    b.HasKey("UserEventId", "UserId");
+                    b.HasIndex("UserEventId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserEventsTable");
+                    b.ToTable("UserEventTable", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.EventSkills", b =>
