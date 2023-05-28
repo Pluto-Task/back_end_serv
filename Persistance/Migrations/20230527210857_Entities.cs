@@ -41,7 +41,6 @@ namespace Persistence.Migrations
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Skills = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Build = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MaxPeople = table.Column<long>(type: "bigint", nullable: false),
@@ -79,7 +78,28 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserEventTable",
+                name: "EventSkills",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SkillId = table.Column<int>(type: "int", nullable: false),
+                    UserEventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Exp = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventSkills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EventSkills_UserEvent_UserEventId",
+                        column: x => x.UserEventId,
+                        principalTable: "UserEvent",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserEventsTable",
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -88,20 +108,25 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserEventTable", x => new { x.UserEventId, x.UserId });
+                    table.PrimaryKey("PK_UserEventsTable", x => new { x.UserEventId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_UserEventTable_UserEvent_UserEventId",
+                        name: "FK_UserEventsTable_UserEvent_UserEventId",
                         column: x => x.UserEventId,
                         principalTable: "UserEvent",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserEventTable_User_UserId",
+                        name: "FK_UserEventsTable_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventSkills_UserEventId",
+                table: "EventSkills",
+                column: "UserEventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Skill_UserId",
@@ -115,8 +140,8 @@ namespace Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserEventTable_UserId",
-                table: "UserEventTable",
+                name: "IX_UserEventsTable_UserId",
+                table: "UserEventsTable",
                 column: "UserId");
         }
 
@@ -124,10 +149,13 @@ namespace Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "EventSkills");
+
+            migrationBuilder.DropTable(
                 name: "Skill");
 
             migrationBuilder.DropTable(
-                name: "UserEventTable");
+                name: "UserEventsTable");
 
             migrationBuilder.DropTable(
                 name: "UserEvent");

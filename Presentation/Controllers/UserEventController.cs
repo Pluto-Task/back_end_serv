@@ -17,6 +17,8 @@ namespace Presentation.Controllers
             _userEventService = userEventService;
         }
 
+
+
         [HttpPost("createEvent")]
         public async Task<IActionResult> CreateUserEvent([FromBody] UserEventRequestApiModel request,
             CancellationToken cancellationToken)
@@ -33,6 +35,28 @@ namespace Presentation.Controllers
             var result = await _userEventService.DeleteUserEvent(id, cancellationToken);
 
             return result.IsFailure ? HandleFailure(result) : Ok();
+        }
+
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAll(CancellationToken token)
+        {
+            var result = await _userEventService.GetAll(token);
+
+            return result.IsFailure ? HandleFailure(result) : Ok(result.Value);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id,CancellationToken cancellationToken)
+        {
+            var result = await _userEventService.GetEvent(id,cancellationToken);
+            return result.IsFailure ? HandleFailure(result) : Ok(result.Value);
+        }
+
+        [HttpPost("getByFilter")]
+        public async Task<IActionResult> GetByFilter([FromBody]FilterRequestApiModel request,CancellationToken cancellationToken)
+        {
+            var result = await _userEventService.GetEventsByFilter(request,cancellationToken);
+            return result.IsFailure ? HandleFailure(result) : Ok(result.Value);
         }
     }
 }

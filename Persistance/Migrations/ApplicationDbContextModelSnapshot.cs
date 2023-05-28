@@ -22,6 +22,30 @@ namespace Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.Entity.EventSkills", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("Exp")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("SkillId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserEventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserEventId");
+
+                    b.ToTable("EventSkills", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entity.Skill", b =>
                 {
                     b.Property<int>("Id")
@@ -139,10 +163,6 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Skills")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -170,7 +190,18 @@ namespace Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserEventTable");
+                    b.ToTable("UserEventsTable");
+                });
+
+            modelBuilder.Entity("Domain.Entity.EventSkills", b =>
+                {
+                    b.HasOne("Domain.Entity.UserEvent", "UserEvent")
+                        .WithMany("EventSkills")
+                        .HasForeignKey("UserEventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserEvent");
                 });
 
             modelBuilder.Entity("Domain.Entity.Skill", b =>
@@ -206,6 +237,11 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Entity.User", b =>
                 {
                     b.Navigation("Skills");
+                });
+
+            modelBuilder.Entity("Domain.Entity.UserEvent", b =>
+                {
+                    b.Navigation("EventSkills");
                 });
 #pragma warning restore 612, 618
         }

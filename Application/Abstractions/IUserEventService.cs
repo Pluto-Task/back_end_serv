@@ -1,4 +1,5 @@
 ﻿using Application.RequestApiModel;
+using Application.ResponseApiModel;
 using Domain.Shared;
 
 namespace Application.Abstractions
@@ -9,5 +10,11 @@ namespace Application.Abstractions
             CancellationToken cancellationToken);
 
         Task<Result> DeleteUserEvent(Guid id, CancellationToken cancellationToken);
+
+        Task<Result<UserEventsResponseApiModel>> GetAll(CancellationToken cancellationToken);
+
+        Task<Result<UserEventResponseApiModel>> GetEvent(Guid id,CancellationToken cancellationToken);
+
+        Task<Result<UserEventsResponseApiModel>> GetEventsByFilter(FilterRequestApiModel filter, CancellationToken cancellationToken);
     }
 }
