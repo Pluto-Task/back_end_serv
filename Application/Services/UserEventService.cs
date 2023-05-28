@@ -120,7 +120,10 @@ namespace Application.Services
         public async Task<Result<UserEventsResponseApiModel>> GetEventsByFilter(FilterRequestApiModel filter, CancellationToken cancellationToken)
         {
             var result = await _userEventRepository.GetWithInclude(x=>true, cancellationToken, y => y.EventSkills);
-            result = result.Where(x => x.Address == filter.City || x.MaxPeople ==filter.MaxPeople || x.EventSkills.Any(y => filter.Skills.Contains(y.SkillId)));
+            if (filter.MaxPeople != 0 && !filter.Skills.Any() && string.IsNullOrEmpty(filter.City))
+            {
+                result = result.Where(x => x.Address == filter.City || x.MaxPeople ==filter.MaxPeople || x.EventSkills.Any(y => filter.Skills.Contains(y.SkillId)));
+            }
 
             var newResult = new UserEventsResponseApiModel(result.Select(x => new UserEventResponseApiModel(x.Id,
                 x.Title, x.Description, x.StartDate, x.EndDate,
