@@ -58,5 +58,29 @@ namespace Presentation.Controllers
             var result = await _userEventService.GetEventsByFilter(request,cancellationToken);
             return result.IsFailure ? HandleFailure(result) : Ok(result.Value);
         }
+
+        [HttpGet("getCreatedByUser")]
+        public async Task<IActionResult> GetCreatedByUser(CancellationToken cancellationToken)
+        {
+            var result = await _userEventService.GetEventsCreatedByUser(cancellationToken);
+
+            return result.IsFailure ? HandleFailure(result) : Ok(result.Value);
+        }
+
+        [HttpGet("getUserEvents")]
+        public async Task<IActionResult> GetUserEvents(CancellationToken cancellationToken)
+        {
+            var result = await _userEventService.GetUserEvents(cancellationToken);
+
+            return result.IsFailure ? HandleFailure(result) : Ok(result.Value);
+        }
+
+        [HttpGet("book/{id}")]
+        public async Task<IActionResult> BookEvent(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _userEventService.BookEvent(id,cancellationToken);
+
+            return result.IsFailure ? HandleFailure(result) : Ok();
+        }
     }
 }

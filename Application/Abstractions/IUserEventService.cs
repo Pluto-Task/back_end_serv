@@ -16,5 +16,11 @@ namespace Application.Abstractions
         Task<Result<UserEventResponseApiModel>> GetEvent(Guid id,CancellationToken cancellationToken);
 
         Task<Result<UserEventsResponseApiModel>> GetEventsByFilter(FilterRequestApiModel filter, CancellationToken cancellationToken);
+
+        Task<Result<UserEventsResponseApiModel>> GetEventsCreatedByUser(CancellationToken cancellationToken);
+
+        Task<Result<UserEventsResponseApiModel>> GetUserEvents( CancellationToken cancellationToken);
+
+        Task<Result> BookEvent(Guid eventId, CancellationToken cancellationToken);
     }
 }

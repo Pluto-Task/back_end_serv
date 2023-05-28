@@ -1,3 +1,3 @@
 ﻿namespace Application.ResponseApiModel;
 
-public record EventSkillsResponseApiModel(string Name, uint Exp);
+public record EventSkillsResponseApiModel(int Id, uint Exp);

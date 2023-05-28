@@ -25,6 +25,17 @@ namespace Application.Services
             _unitOfWork = unitOfWork;
             _eventSkillsRepository = eventSkillsRepository;
         }
+
+        public async Task<Result> BookEvent(Guid eventId,CancellationToken cancellationToken)
+        {
+            await _userEventTableRepository.CreateAsync(new UserEventTable()
+                { IsConfirmed = false, UserEventId = eventId, UserId = _userAccessor.GetCurrentUserId() }, cancellationToken);
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return Result.Success();
+        }
+
         public async Task<Result> CreateUserEvent(UserEventRequestApiModel userEventRequest, CancellationToken cancellationToken)
         {
             var userEvent = new UserEvent(userEventRequest.Title, userEventRequest.Description, userEventRequest.StartDate, userEventRequest.EndDate,
@@ -87,7 +98,7 @@ namespace Application.Services
             var newResult = new UserEventsResponseApiModel(result.Select(x => new UserEventResponseApiModel(x.Id,
                 x.Title, x.Description, x.StartDate, x.EndDate,
                 x.EventSkills
-                    .Select(y => new EventSkillsResponseApiModel(Enum.GetName(typeof(SkillName), y.SkillId), y.Exp)),
+                    .Select(y => new EventSkillsResponseApiModel(y.SkillId, y.Exp)),
                 x.PhoneNumber, x.Email, x.Address, x.Build, x.Coordinates)));
 
             return newResult;
@@ -100,7 +111,7 @@ namespace Application.Services
 
             var userEventMapped = new UserEventResponseApiModel(userEvent.Id, userEvent.Title, userEvent.Description,
                 userEvent.StartDate, userEvent.EndDate, userEvent.EventSkills
-                    .Select(y => new EventSkillsResponseApiModel(Enum.GetName(typeof(SkillName), y.SkillId), y.Exp)),
+                    .Select(y => new EventSkillsResponseApiModel(y.SkillId, y.Exp)),
                 userEvent.PhoneNumber, userEvent.Email, userEvent.Address, userEvent.Build, userEvent.Coordinates);
 
             return userEventMapped;
@@ -114,10 +125,38 @@ namespace Application.Services
             var newResult = new UserEventsResponseApiModel(result.Select(x => new UserEventResponseApiModel(x.Id,
                 x.Title, x.Description, x.StartDate, x.EndDate,
                 x.EventSkills
-                    .Select(y => new EventSkillsResponseApiModel(Enum.GetName(typeof(SkillName), y.SkillId), y.Exp)),
+                    .Select(y => new EventSkillsResponseApiModel( y.SkillId, y.Exp)),
                 x.PhoneNumber, x.Email, x.Address, x.Build, x.Coordinates)));
 
             return newResult;
         }
+
+        public async Task<Result<UserEventsResponseApiModel>> GetEventsCreatedByUser(CancellationToken cancellationToken)
+        {
+            var result = await _userEventRepository.GetWithInclude(x => x.CreatedBy == _userAccessor.GetCurrentUserId(), cancellationToken, y => y.EventSkills);
+
+            var newResult = new UserEventsResponseApiModel(result.Select(x => new UserEventResponseApiModel(x.Id,
+                x.Title, x.Description, x.StartDate, x.EndDate,
+                x.EventSkills
+                    .Select(y => new EventSkillsResponseApiModel(y.SkillId, y.Exp)),
+                x.PhoneNumber, x.Email, x.Address, x.Build, x.Coordinates)));
+
+            return newResult;
+        }
+
+        public async Task<Result<UserEventsResponseApiModel>> GetUserEvents(CancellationToken cancellationToken)
+        {
+            var result = await _userEventTableRepository.GetWithInclude(x=>x.UserId == _userAccessor.GetCurrentUserId(), cancellationToken, x=>x.UserEvent);
+
+            var newResult = new UserEventsResponseApiModel(result.Select(x => new UserEventResponseApiModel(x.UserEvent.Id,
+                x.UserEvent.Title, x.UserEvent.Description, x.UserEvent.StartDate, x.UserEvent.EndDate,
+                x.UserEvent.EventSkills
+                    .Select(y => new EventSkillsResponseApiModel( y.SkillId, y.Exp)),
+                x.UserEvent.PhoneNumber, x.UserEvent.Email, x.UserEvent.Address, x.UserEvent.Build, x.UserEvent.Coordinates)));
+
+            return newResult;
+        }
+
+
     }
 }
